@@ -438,3 +438,27 @@ ggplot(shipping_usage, aes(x = Purchase_Cluster, y = Percent, fill = Shipping.Ty
     y = "Percentage"
   ) +
   theme_minimal()
+
+# --- Statistical Significance Testing by Purchase Cluster ---
+
+cat("\n=== Chi-Squared Test: Promo Code Usage by Purchase Cluster ===\n")
+promo_table <- table(data_model$Purchase_Cluster, data_model$Promo.Code.Used)
+print(promo_table)
+print(chisq.test(promo_table))
+
+cat("\n=== Chi-Squared Test: Shipping Type Usage by Purchase Cluster ===\n")
+ship_table <- table(data_model$Purchase_Cluster, data_model$Shipping.Type)
+print(ship_table)
+print(chisq.test(ship_table))
+
+# Optional: Check normality of Age and Previous Purchases
+cat("\n=== Normality Check for Age by Cluster ===\n")
+by(data_model$Age, data_model$Purchase_Cluster, shapiro.test)
+
+# If not normal, use Kruskal-Wallis test instead of ANOVA
+cat("\n=== Kruskal-Wallis Test: Age by Purchase Cluster ===\n")
+print(kruskal.test(Age ~ Purchase_Cluster, data = data_model))
+
+cat("\n=== Kruskal-Wallis Test: Previous Purchases by Purchase Cluster ===\n")
+print(kruskal.test(Previous.Purchases ~ Purchase_Cluster, data = data_model))
+
